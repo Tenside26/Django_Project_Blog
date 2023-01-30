@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% include 'messages.html' %}
+<html>
+<head>
+    <title>User Panel Page</title>
+</head>
+<body>
+    <p>Image: {{ queryset.picture }}</p>
+    <p>Your Username Is: {{ queryset.username }}</p>
+    <p>Your First Name Is: {{ queryset.first_name }}</p>
+    <p>Your Last Name Is: {{ queryset.last_name }}</p>
+    <p>Your Email Is: {{ queryset.email }}</p>
+    <p>Your Age: {{ queryset.age }}</p>
+    <p>About Yourself: {{ queryset.info }}</p>
+    <a href="{% url 'user-friend-list' request.user.username %}"><button>Friend List</button></a>
+    <hr>
+    <p>Data Joined: {{ queryset.date_joined }}</p>
+    <p>Last Online: {{ queryset.last_login }}</p>
+    <hr>
+    <p>Want To Update Your User Info? <a href="{% url 'user-update' queryset.username %}"><button>Click</button></a></p>
+    <p>Want To Change Your Password? <a href="{% url 'user-password-change' %}"><button>Click</button></a></p>
+    <h1>Want To Go Back To Blog Page?<a href="{% url 'blog' %}"><button>Click</button></a></h1>
+</body>
+</html>

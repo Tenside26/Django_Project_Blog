@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% include 'messages.html' %}
+<html>
+<head>
+    <title>Blog Page</title>
+</head>
+<body>
+
+    <form method="POST" action="{% url 'search-results' %}">
+        {% csrf_token %}
+        <input type="search" name="search" placeholder="Search Input">
+        <button type="submit">Search</button>
+    </form>
+    <hr>
+
+    <form method="POST" name="for_sorting">
+        {% csrf_token %}
+        <label for="sorting">Choose Posts Sorting :</label>
+        <select id="sorting" name="sort">
+          <option value="post_date_rising">Post Creation Date Newest</option>
+          <option value="post_date_decreasing">Post Creation Date Oldest</option>
+          <option value="views_rising">Post Views Highest</option>
+          <option value="views_decreasing">Post Views Lowest</option>
+          <option value="like_rising">Post Likes Highest</option>
+          <option value="like_decreasing">Post Likes Lowest</option>
+          <option value="dislike_rising">Post Dislikes Highest</option>
+          <option value="dislike_decreasing">Post Dislikes Lowest</option>
+          <option value="comments_rising">Post Comments Highest</option>
+          <option value="comments_decreasing">Post Comments Lowest</option>
+        </select>
+        <button type="submit">Click</button>
+    </form>
+    <hr>
+
+    <h1>To See Your User Panel?<a href="{% url 'user-panel' request.user.username %}"><button>Click</button></a></h1>
+    <h2>Want To Logout?<a href="{% url 'logout' %}"><button>Click</button></a></h2>
+    <h2>Want To Create Post? <a href="{% url 'create-post' %}"><button>Click</button></a></h2>
+
+    <hr>
+    <h2>Recently Viewed Posts:</h2>
+    {% for post in recently_viewed_posts %}
+    <h3><a href="{% url 'post-detail' post.post_slug %}">{{ post.post_title }}</a></h3>
+    {% empty %}
+    <h3>There Are No Posts Seen Recently</h3>
+    {% endfor %}
+    <hr>
+
+    {% for data in queryset %}
+    {% if request.user == data.post_user %}
+    <h3>Title: {{ data.post_title }}, By <a href="{% url 'user-panel' data.post_user.username %}">{{ data.post_user.username }}</a></h3>
+    {% else %}
+    <h3>Title: {{ data.post_title }}, By <a href="{% url 'other-user-panel' data.post_user.username %}">{{ data.post_user.username }}</a></h3>
+    {% endif %}
+    <h4>Created: {{ data.post_date_created }}</h4>
+    <h4>{{ data.post_content|truncatewords:20 }}</h4>
+    <h4>Tags:</h4>
+    {% for tag in data.post_tag.all %}
+    <h4>{{ tag.tag }}</h4>
+    {% endfor %}
+
+    <h4>Number Of Views: {{ data.post_views_count }}</h4>
+    <h4>Number Of Comments {{ data.post_comments_count }}</h4>
+    <h4>Number Of Like {{ data.post_likes_count }}</h4>
+    <h4>Number Of Dislike {{ data.post_dislikes_count }}</h4>
+    <h5>Want To See Full Post? <a href="{% url 'post-detail' data.post_slug %}"><button>Click</button></a></h5>
+
+    {% if request.user == data.post_user %}
+
+    <h5>Want To Edit Your Post? <a href="{% url 'edit-post' data.post_slug %}"><button>Click</button></a></h5>
+    <h5>Want To Delete Your Post? <a href="{% url 'delete-post' data.post_slug %}"><button>Click</button></a></h5>
+
+    {% endif %}
+
+    <hr>
+
+    {% endfor %}
+
+</body>
+</html>

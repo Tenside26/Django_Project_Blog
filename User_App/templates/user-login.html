@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% include 'messages.html' %}
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <h2>Want To Register? <a href="{% url 'register' %}"><button>Click</button></a></h2>
+</body>
+</html>

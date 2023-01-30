@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Post</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+    <h1>Want To Go Back To Blog Page?<a href="{% url 'blog' %}"><button>Click</button></a></h1>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Comment</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <h1>Want To Go Back To Post Page? <a href="{{ queryset.get_absolute_url }}"><button>Click</button></a></h1>
+</body>
+</html>

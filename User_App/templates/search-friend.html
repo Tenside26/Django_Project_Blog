@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+{% include 'messages.html' %}
+<head>
+    <title>Search Friend</title>
+</head>
+<body>
+    <h1>You Searched For: {{ friend_search }}</h1>
+    <hr>
+    {% for data in queryset %}
+
+    {% if request.user.username == data.username %}
+    <h3>Username: <a href="{% url 'user-panel' data.username %}">{{ data.username }}</a></h3>
+    {% else %}
+    <h3>Username: <a href="{% url 'other-user-panel' data.username %}">{{ data.username }}</a></h3>
+    {% endif %}
+    <h3>First Name: {{ data.first_name }}</h3>
+    <h3>Last Name: {{ data.last_name }}</h3>
+    <h3>Email: {{ data.email }}</h3>
+    <h3>Age: {{ data.age }}</h3>
+    <hr>
+    {% empty %}
+    <h1>There is Nothing Like {{ friend_search }} In DataBase</h1>
+    {% endfor %}
+</body>
+</html>

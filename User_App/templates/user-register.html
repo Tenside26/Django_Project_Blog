@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Page</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    <h2>Want To Go Back To Login Page? <a href="{% url 'login' %}"><button>Click</button></a></h2>
+</body>
+</html>

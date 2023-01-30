@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% include 'messages.html' %}
+<html>
+<head>
+    <title>User Info Page</title>
+</head>
+<body>
+    <p>Image: {{ queryset.picture }}</p>
+    <p>Username: {{ queryset.username }}</p>
+    <p>First Name: {{ queryset.first_name }}</p>
+    <p>Last Name: {{ queryset.last_name }}</p>
+    <p>Email: {{ queryset.email }}</p>
+    <p>Age: {{ queryset.age }}</p>
+    <p>Info About User: {{ queryset.info }}</p>
+    <hr>
+    <p>Data Joined: {{ queryset.date_joined }}</p>
+    <p>Last Online: {{ queryset.last_login }}</p>
+    <hr>
+
+    {% if check_pending and request.user %}
+    <h2>You Already Send Friend Request</h2>
+
+    {% elif check_accepted and request.user %}
+    <h2>You Already Have This User As a Friend</h2>
+
+    {% elif check_send and request.user %}
+    <h2>This User Already Send You Friend Request</h2>
+
+    {% elif not check_pending and request.user %}
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Add To Friends <button type="submit">Click</button></h2>
+    </form>
+    {% endif %}
+
+
+    <h1>Want To Go Back To Blog Page?<a href="{% url 'blog' %}"><button>Click</button></a></h1>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% include 'messages.html' %}
+<head>
+    <title>User Friend List</title>
+</head>
+<body>
+    <h1>{{ list_owner.list_owner }} Friend List</h1>
+    <hr>
+    <form method="POST" action="{% url 'search-friend' %}">
+        {% csrf_token %}
+        <label>Search For Friend</label>
+        <input type="search" name="search_friend" placeholder="FName, LName, Age... ">
+        <button type="submit">Search</button>
+    </form>
+    <hr>
+    <h2>Friends:</h2>
+    {% for friend_a in accepted_friends_queryset %}
+    <form method="POST">
+        {% csrf_token %}
+    <p>{{ friend_a.friend.username }}</p>
+        <input type='hidden' value='{{ friend_a.id }}' name='pk'>
+        <button type="submit" name="remove">Remove</button>
+    </form>
+    {% empty %}
+    <p>Friend List Is Empty</p>
+    {% endfor %}
+    <hr>
+    <h2>Pending Friends:</h2>
+    {% for friend_p in pending_friends_queryset %}
+    <form method="POST">
+        {% csrf_token %}
+    <p>{{ friend_p.friend_list.list_owner }}</p>
+        <input type='hidden' value='{{ friend_p.id }}' name='pk'>
+        <button type="submit" name="accept">Accept</button>
+        <button type="submit" name="decline">Decline</button>
+    </form>
+    {% empty %}
+    <p>There Are No Pending Friends Requests</p>
+    {% endfor %}
+    <hr>
+    <h2>Sent Friendship Requests:</h2>
+    {% for friend_s in send_friends_queryset %}
+    <form method="POST">
+        {% csrf_token %}
+    <p>{{ friend_s.friend.username }}</p>
+        <input type='hidden' value='{{ friend_s.id }}' name='pk'>
+        <button type="submit" name="cancel">Cancel</button>
+
+    </form>
+    {% empty %}
+    <p>There Are No Sent Friends Requests</p>
+    {% endfor %}
+    <hr>
+    <h3>Want To Go Back To Blog Page?<a href="{% url 'blog' %}"><button>Click</button></a></h3>
+    <h3>Want To Go Back To User Panel?<a href="{% url 'user-panel' request.user.username %}"><button>Click</button></a></h3>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+{% include 'messages.html' %}
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>You Searched For: {{ search_results }}</h1>
+
+    <hr>
+
+    {% for data in queryset %}
+
+    {% if request.user == data.post_user %}
+    <h3>Title: {{ data.post_title }}, By <a href="{% url 'user-panel' data.post_user.username %}">{{ data.post_user.username }}</a></h3>
+    {% else %}
+    <h3>Title: {{ data.post_title }}, By <a href="{% url 'other-user-panel' data.post_user.username %}">{{ data.post_user.username }}</a></h3>
+    {% endif %}
+    <h4>{{ data.post_content|truncatewords:20 }}</h4>
+    <h5>Want To See Full Post? <a href="{% url 'post-detail' data.post_slug %}"><button>Click</button></a></h5>
+
+    {% if request.user == data.post_user %}
+
+    <h5>Want To Edit Your Post? <a href="{% url 'edit-post' data.post_slug %}"><button>Click</button></a></h5>
+    <h5>Want To Delete Your Post? <a href="{% url 'delete-post' data.post_slug %}"><button>Click</button></a></h5>
+
+    {% endif %}
+    {% empty %}
+    <h1>There is Nothing Like {{ search_results }} In DataBase</h1>
+    {% endfor %}
+</body>
+</html>

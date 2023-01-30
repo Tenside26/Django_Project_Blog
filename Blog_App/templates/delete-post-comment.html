@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Comment</title>
+</head>
+<body>
+     <form method="POST">
+         {% csrf_token %}
+         <h1>Do You Want To Delete Comment?</h1>
+        <button type="submit">Yes</button>
+    </form>
+    <a href="{{ queryset.get_absolute_url }}"><button>No</button></a>
+</body>
+</html>

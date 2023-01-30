@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% include 'messages.html' %}
+<html>
+<head>
+    <title>Post Page</title>
+</head>
+<body>
+    {% if request.user == queryset.post_user %}
+    <h3>Title: {{ queryset.post_title }}, By <a href="{% url 'user-panel' queryset.post_user.username %}">{{ queryset.post_user }}</a></h3>
+    {% else %}
+    <h3>Title: {{ queryset.post_title }}, By <a href="{% url 'other-user-panel' queryset.post_user.username %}">{{ queryset.post_user }}</a></h3>
+    {% endif %}
+    <h4>Created :{{ queryset.post_date_created }}</h4>
+    <h4>{{ queryset.post_content }}</h4>
+    <hr>
+    <h4>Tags:</h4>
+    {% for tag in queryset.post_tag.all %}
+    <h4>{{ tag.tag }}</h4>
+    {% endfor %}
+    <hr>
+    <h5>Number Of Likes: {{ queryset.post_likes_count}} </h5>
+    <h5>Number Of Dislikes: {{ queryset.post_dislikes_count }} </h5>
+    <h5>Number Of Views: {{ queryset.post_views_count }} </h5>
+    <h5>Number Of Comments: {{ queryset.post_comments_count }} </h5>
+
+    {% for vote in queryset.vote_post.all %}
+    {% if vote.vote_post_user == request.user and vote.post_if_like %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <h5>You Already Liked This Post, Do You Want To Unlike?<button type="submit" name="post_unlike">Unlike</button></h5>
+    </form>
+
+    {% elif vote.vote_post_user == request.user and vote.post_if_dislike %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <h5>You Already Disliked This Post, Do You Want To Un-Dislike?<button type="submit" name="post_un-dislike">Un-Dislike</button></h5>
+    </form>
+
+    {% else %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="post_like">Like</button>
+        <button type="submit" name="post_dislike">Dislike</button>
+    </form>
+
+    {% endif %}
+
+    {% empty %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="post_like">Like</button>
+        <button type="submit" name="post_dislike">Dislike</button>
+    </form>
+
+    {% endfor %}
+
+    <hr>
+
+    <h1>Want To Add Comment ? <a href="{% url 'create-post-comment' queryset.post_slug %}"><button>Click</button></a></h1>
+    <h1>Want To Go Back To Blog Page? <a href="{% url 'blog' %}"><button>Click</button></a></h1>
+
+    <hr>
+
+    {% for data in comments %}
+
+    {% if request.user == data.com_user %}
+    <h3>Comment Added By: <a href="{% url 'user-panel' data.com_user.username %}">{{ data.com_user.username }}</a></h3>
+    {% else %}
+    <h3>Comment Added By: <a href="{% url 'other-user-panel' data.com_user.username %}">{{ data.com_user.username }}</a></h3>
+    {% endif %}
+    <h3>{{ data.com_content }}</h3>
+    <h4>Number Of Likes: {{ data.comment_likes_count}}</h4>
+    <h4>Number Of Dislikes: {{ data.comment_dislikes_count }}</h4>
+
+    {% for vote in data.vote_comment.all %}
+
+    {% if vote.vote_com_user == request.user and vote.comment_if_like %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type='hidden' value='{{ data.id }}' name='pk'>
+        <h5>You Already Liked This Comment, Do You Want To Unlike?<button type="submit" name="com_unlike">Unlike</button></h5>
+    </form>
+
+    {% elif vote.vote_com_user == request.user and vote.comment_if_dislike %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type='hidden' value='{{ data.id }}' name='pk'>
+        <h5>You Already Disliked This Comment, Do You Want To Un-Dislike?<button type="submit" name="com_un-dislike">Un-Dislike</button></h5>
+    </form>
+
+    {% else %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type='hidden' value='{{ data.id }}' name='pk'>
+        <button type="submit" name="com_like">Like</button>
+        <button type="submit" name="com_dislike">Dislike</button>
+    </form>
+
+    {% endif %}
+    {% empty %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type='hidden' value='{{ data.id }}' name='pk'>
+        <button type="submit" name="com_like">Like</button>
+        <button type="submit" name="com_dislike">Dislike</button>
+    </form>
+
+    {% endfor %}
+
+    {% if request.user == data.com_user %}
+
+    <h2>Want To Edit Comment ? <a href="{% url 'edit-post-comment' slug=queryset.post_slug pk=data.id %}"><button>Click</button></a></h2>
+    <h2>Want To Delete Comment ? <a href="{% url 'delete-post-comment' slug=queryset.post_slug pk=data.id %}"><button>Click</button></a></h2>
+
+    {% endif %}
+
+    <hr>
+
+    {% endfor %}
+
+</body>
+</html>
